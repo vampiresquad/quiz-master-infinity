@@ -5,7 +5,10 @@
 
 import { GameState } from './engine.js';
 
-/* Story blocks */
+/* ===============================
+   Core Story Blocks
+================================ */
+
 const story = {
   intro: [
     "তুমি একটি নীরব গ্রন্থাগারে প্রবেশ করেছো…",
@@ -39,20 +42,26 @@ const story = {
   ]
 };
 
-/* Pick random line */
+/* ===============================
+   Helpers
+================================ */
+
 function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-/* Get intro story */
+/* ===============================
+   Public Story API
+================================ */
+
 export function getIntroStory() {
-  if (!GameState.mode.story) return '';
+  if (!GameState.story) return '';
   return pick(story.intro);
 }
 
-/* Get feedback story */
 export function getStoryByResult(type) {
-  if (!GameState.mode.story) return '';
+  if (!GameState.story) return '';
+
   switch (type) {
     case 'correct':
       return pick(story.correct);
@@ -65,16 +74,17 @@ export function getStoryByResult(type) {
   }
 }
 
-/* Get ending story */
-export function getEndingStory() {
-  if (!GameState.mode.story) return '';
-  return GameState.score >= 70
+export function getEndingStory(totalQuestions) {
+  if (!GameState.story) return '';
+
+  const ratio = GameState.score / (totalQuestions * 10);
+  return ratio >= 0.7
     ? pick(story.end_good)
     : pick(story.end_bad);
 }
+
 /* ===============================
-   STORY by DIFFICULTY
-   Narrative Depth Control
+   Story by Difficulty
 ================================ */
 
 const difficultyStory = {
@@ -95,15 +105,14 @@ const difficultyStory = {
   ]
 };
 
-/* Get story based on difficulty */
 export function getDifficultyStory(level) {
-  if (!GameState.mode.story) return '';
-  const pool = difficultyStory[level] || [];
-  return pool[Math.floor(Math.random() * pool.length)];
+  if (!GameState.story) return '';
+  const pool = difficultyStory[level] || difficultyStory.medium;
+  return pick(pool);
 }
+
 /* ===============================
-   ENDING PHILOSOPHY
-   Life-Oriented Closure
+   Ending Philosophy
 ================================ */
 
 const philosophy = {
@@ -124,13 +133,12 @@ const philosophy = {
   ]
 };
 
-/* Get philosophy by score */
-export function getEndingPhilosophy(score, total) {
-  const ratio = score / (total * 10);
-  let pool = philosophy.low;
+export function getEndingPhilosophy(score, totalQuestions) {
+  const ratio = score / (totalQuestions * 10);
 
+  let pool = philosophy.low;
   if (ratio >= 0.75) pool = philosophy.high;
   else if (ratio >= 0.4) pool = philosophy.mid;
 
-  return pool[Math.floor(Math.random() * pool.length)];
+  return pick(pool);
 }
