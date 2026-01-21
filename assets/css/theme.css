@@ -3,45 +3,67 @@
    Emotion Reactive UI
 ================================ */
 
-/* Default State */
+/* ===============================
+   Base Theme Transition
+================================ */
+
 body {
   transition: background 0.6s ease, filter 0.4s ease;
 }
 
-/* Calm Mode (Normal play) */
+/* ===============================
+   Core States (Mutually Exclusive)
+================================ */
+
+/* Calm Mode (Default) */
 body.calm {
   background: radial-gradient(circle at top, #1a2a6c, #000);
+  filter: none;
 }
 
 /* Focus Mode (Fast correct streak) */
 body.focus {
   background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
-  filter: saturate(1.2);
+  filter: saturate(1.15);
 }
 
 /* Panic Mode (Low time / wrong streak) */
 body.panic {
   background: radial-gradient(circle at center, #400000, #000);
-  filter: contrast(1.2);
+  filter: contrast(1.15);
 }
+
+/* ===============================
+   Special Modes (Override)
+================================ */
 
 /* Dark Story Mode */
 body.dark-story {
   background: radial-gradient(circle at bottom, #000000, #1a1a1a);
+  filter: none;
 }
 
 /* Silent Hardcore Mode */
 body.silent {
-  background: #000;
+  background: #000000;
   filter: grayscale(1);
 }
+
+/* Silent overrides */
+body.silent .feedback {
+  display: none;
+}
+
+/* ===============================
+   Feedback Animations
+================================ */
 
 /* Correct Answer Flash */
 .correct-flash {
   animation: glow 0.6s;
 }
 
-/* Wrong Answer Shake Screen */
+/* Wrong Answer Screen Shake */
 .screen-shake {
   animation: shake 0.4s;
 }
@@ -51,7 +73,17 @@ body.silent {
   animation: slideIn 0.4s ease;
 }
 
-/* Hide feedback (Silent mode helper) */
-body.silent .feedback {
-  display: none;
+/* ===============================
+   Accessibility: Reduced Motion
+================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
+  .correct-flash,
+  .screen-shake,
+  .question-transition {
+    animation: none !important;
+  }
 }
