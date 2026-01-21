@@ -1,1 +1,7 @@
+.panic {
+  background: radial-gradient(#400, #000);
+}
 
+.calm {
+  background: radial-gradient(#0a3, #001);
+}
