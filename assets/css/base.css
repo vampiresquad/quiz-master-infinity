@@ -3,10 +3,15 @@
    Quiz Master ∞
 ================================ */
 
+/* CSS Module Imports */
 @import url('./layout.css');
 @import url('./components.css');
 @import url('./animations.css');
 @import url('./theme.css');
+
+/* ===============================
+   Root Variables
+================================ */
 
 :root {
   --glass: rgba(255, 255, 255, 0.15);
@@ -22,28 +27,48 @@
   --bg-soft: #101820;
 }
 
-* {
+/* ===============================
+   Reset
+================================ */
+
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
+/* ===============================
+   Base Layout
+================================ */
+
+html {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
 }
 
 body {
+  min-height: 100vh;
   font-family: 'Hind Siliguri', sans-serif;
   background: radial-gradient(circle at top, #1a2a6c, #000);
   color: var(--text);
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   overflow-x: hidden;
+
+  /* Text rendering polish */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Utility */
+/* ===============================
+   Utility Classes
+================================ */
+
 .hidden {
   display: none !important;
 }
