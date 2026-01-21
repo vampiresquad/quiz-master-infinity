@@ -3,7 +3,10 @@
    Buttons, Options, Pills
 ================================ */
 
-/* Headings */
+/* ===============================
+   Headings & Text
+================================ */
+
 h1 {
   font-size: 28px;
   text-align: center;
@@ -14,9 +17,13 @@ p {
   text-align: center;
   opacity: 0.85;
   margin-bottom: 15px;
+  line-height: 1.6;
 }
 
-/* Primary Button */
+/* ===============================
+   Primary Button
+================================ */
+
 .btn-primary {
   width: 100%;
   padding: 14px;
@@ -25,10 +32,14 @@ p {
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
+
   background: linear-gradient(45deg, #11998e, #38ef7d);
   color: #000;
+
   box-shadow: 0 10px 25px rgba(56,239,125,0.35);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-primary:hover {
@@ -36,7 +47,15 @@ p {
   box-shadow: 0 15px 35px rgba(56,239,125,0.5);
 }
 
-/* Secondary Button */
+.btn-primary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ===============================
+   Secondary Button
+================================ */
+
 .btn-secondary {
   width: 100%;
   padding: 14px;
@@ -45,11 +64,22 @@ p {
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
+
   background: rgba(255,255,255,0.9);
   color: #000;
+
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Option Button */
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ===============================
+   Option Button
+================================ */
+
 .option-btn {
   padding: 14px;
   border-radius: 16px;
@@ -58,36 +88,53 @@ p {
   font-weight: 600;
   text-align: left;
   cursor: pointer;
+
   background: rgba(255,255,255,0.95);
   color: #000;
-  transition: all 0.2s ease;
+
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .option-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  background: #fff;
+  background: #ffffff;
 }
 
-/* Correct / Wrong */
+.option-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ===============================
+   Correct / Wrong States
+================================ */
+
 .option-btn.correct {
   background: var(--correct) !important;
-  color: #fff;
+  color: #ffffff;
   box-shadow: 0 0 18px var(--correct);
 }
 
 .option-btn.wrong {
   background: var(--wrong) !important;
-  color: #fff;
+  color: #ffffff;
   animation: shake 0.4s;
 }
 
-/* Disabled */
+/* ===============================
+   Disabled State
+================================ */
+
 .option-btn:disabled {
   opacity: 0.8;
   cursor: not-allowed;
 }
 
-/* Stat Pill */
+/* ===============================
+   Stat Pill
+================================ */
+
 .stat-pill {
   padding: 6px 14px;
   border-radius: 20px;
@@ -95,7 +142,10 @@ p {
   font-size: 13px;
 }
 
-/* Lifeline Button */
+/* ===============================
+   Lifeline Button
+================================ */
+
 .lifeline-btn {
   padding: 8px 14px;
   border-radius: 30px;
@@ -103,9 +153,12 @@ p {
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
+
   background: linear-gradient(45deg, #ff9800, #f44336);
-  color: #fff;
+  color: #ffffff;
+
   box-shadow: 0 6px 15px rgba(244,67,54,0.4);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .lifeline-btn:disabled {
@@ -113,17 +166,23 @@ p {
   cursor: not-allowed;
 }
 
-/* Score Circle */
+/* ===============================
+   Score Circle
+================================ */
+
 .score-circle {
   width: 120px;
   height: 120px;
   border-radius: 50%;
+
   background: rgba(255,255,255,0.15);
   display: flex;
   justify-content: center;
   align-items: center;
+
   font-size: 36px;
   font-weight: bold;
+
   margin: 20px auto;
   border: 2px solid rgba(255,255,255,0.25);
 }
