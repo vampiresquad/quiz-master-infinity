@@ -31,10 +31,17 @@ export const GameState = {
 let questions = [];
 let totalQuestions = 0;
 
-/* Initialize Game */
+import { applyDifficultyCurve } from './engine.js';
+
 export function initGame(questionPool) {
   GameState.reset();
-  questions = shuffle([...questionPool]);
+
+  // Shuffle first
+  let shuffled = shuffle([...questionPool]);
+
+  // Apply difficulty curve
+  questions = applyDifficultyCurve(shuffled);
+
   totalQuestions = questions.length;
 }
 
