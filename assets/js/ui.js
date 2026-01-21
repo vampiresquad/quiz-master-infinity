@@ -10,27 +10,35 @@ import {
 } from './engine.js';
 
 /* ===============================
-   Cached DOM Elements (Guarded)
+   Safe DOM Access Helpers
 ================================ */
 
-const screens = {
-  start: document.getElementById('start-screen'),
-  game: document.getElementById('game-screen'),
-  result: document.getElementById('result-screen')
-};
+function getScreens() {
+  return {
+    start: document.getElementById('start-screen'),
+    game: document.getElementById('game-screen'),
+    result: document.getElementById('result-screen')
+  };
+}
 
-const questionEl = document.getElementById('question');
-const optionsEl = document.getElementById('options-container');
-const scoreEl = document.getElementById('score');
-const qCountEl = document.getElementById('q-count');
-const progressFill = document.getElementById('progress');
-const feedbackEl = document.getElementById('feedback');
+function getUI() {
+  return {
+    questionEl: document.getElementById('question'),
+    optionsEl: document.getElementById('options-container'),
+    scoreEl: document.getElementById('score'),
+    qCountEl: document.getElementById('q-count'),
+    progressFill: document.getElementById('progress'),
+    feedbackEl: document.getElementById('feedback')
+  };
+}
 
 /* ===============================
    Screen Control
 ================================ */
 
 export function showScreen(name) {
+  const screens = getScreens();
+
   Object.values(screens).forEach(screen => {
     if (screen) screen.classList.add('hidden');
   });
@@ -46,11 +54,13 @@ export function showScreen(name) {
 
 export function renderQuestion() {
   const data = getCurrentQuestion();
+  const { questionEl, optionsEl } = getUI();
+
   if (!data || !questionEl || !optionsEl) return;
 
   // Reset animation safely
   questionEl.classList.remove('question-transition');
-  void questionEl.offsetWidth; // force reflow
+  void questionEl.offsetWidth;
 
   // Question text
   questionEl.textContent = data.q;
@@ -76,6 +86,7 @@ export function renderQuestion() {
 ================================ */
 
 export function updateStats() {
+  const { scoreEl, qCountEl, progressFill } = getUI();
   const progress = getProgress();
 
   if (scoreEl) scoreEl.textContent = GameState.score;
@@ -90,11 +101,14 @@ export function updateStats() {
 ================================ */
 
 export function disableOptions() {
+  const { optionsEl } = getUI();
   if (!optionsEl) return;
+
   [...optionsEl.children].forEach(btn => (btn.disabled = true));
 }
 
 export function showAnswer(correctIndex, selectedIndex) {
+  const { optionsEl } = getUI();
   if (!optionsEl) return;
 
   [...optionsEl.children].forEach((btn, idx) => {
@@ -110,6 +124,7 @@ export function showAnswer(correctIndex, selectedIndex) {
 ================================ */
 
 export function setFeedback(text = '', type = 'normal') {
+  const { feedbackEl } = getUI();
   if (!feedbackEl) return;
 
   if (GameState.mode.silent) {
