@@ -3,102 +3,101 @@
    Quiz Master ∞
 ================================ */
 
+/* ===============================
+   Global Game State
+================================ */
+
 export const GameState = {
   index: 0,
   score: 0,
+  wrong: 0,
+  streak: 0,
+  lifeline: false,
   timeHistory: [],
-  wrongCount: 0,
-  correctStreak: 0,
-  lifelineUsed: false,
 
-  mode: {
-    silent: false,
-    story: true,
-    adaptive: true
-  },
+  /* Modes */
+  silent: false,
+  story: true,
+  adaptive: true,
 
   reset() {
     this.index = 0;
     this.score = 0;
+    this.wrong = 0;
+    this.streak = 0;
+    this.lifeline = false;
     this.timeHistory = [];
-    this.wrongCount = 0;
-    this.correctStreak = 0;
-    this.lifelineUsed = false;
   }
 };
 
-// Internal engine data
+/* ===============================
+   Internal Engine Data
+================================ */
+
 let questions = [];
 let totalQuestions = 0;
 
-import { applyDifficultyCurve } from './engine.js';
+/* ===============================
+   Game Initialization
+================================ */
 
 export function initGame(questionPool) {
   GameState.reset();
 
-  // Shuffle first
-  let shuffled = shuffle([...questionPool]);
-
-  // Apply difficulty curve
-  questions = applyDifficultyCurve(shuffled);
-
+  // Shuffle question pool
+  questions = shuffle([...questionPool]);
   totalQuestions = questions.length;
 }
 
-/* Get current question */
+/* ===============================
+   Question Handling
+================================ */
+
 export function getCurrentQuestion() {
-  return questions[GameState.index];
+  return questions[GameState.index] || null;
 }
 
-/* Submit answer */
 export function submitAnswer(isCorrect, timeTaken) {
   GameState.timeHistory.push(timeTaken);
 
   if (isCorrect) {
     GameState.score += 10;
-    GameState.correctStreak++;
+    GameState.streak++;
   } else {
-    GameState.wrongCount++;
-    GameState.correctStreak = 0;
+    GameState.wrong++;
+    GameState.streak = 0;
   }
 }
 
-/* Move to next question */
 export function nextQuestion() {
   GameState.index++;
   return GameState.index < totalQuestions;
 }
 
-/* Get progress */
+/* ===============================
+   Progress & Stats
+================================ */
+
 export function getProgress() {
   return {
     current: GameState.index + 1,
     total: totalQuestions,
-    percent: (GameState.index / totalQuestions) * 100
+    percent: totalQuestions
+      ? (GameState.index / totalQuestions) * 100
+      : 0
   };
 }
 
-/* Average answer time */
 export function getAverageTime() {
   if (!GameState.timeHistory.length) return 0;
   const sum = GameState.timeHistory.reduce((a, b) => a + b, 0);
-  return (sum / GameState.timeHistory.length).toFixed(1);
+  return sum / GameState.timeHistory.length;
 }
 
-/* Shuffle utility (Fisher–Yates) */
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
 /* ===============================
-   DIFFICULTY CURVE
-   Easy → Medium → Hard
+   Difficulty System
 ================================ */
 
-/* Get difficulty by progress */
 export function getCurrentDifficulty() {
   const progress = GameState.index / Math.max(1, totalQuestions);
 
@@ -107,12 +106,14 @@ export function getCurrentDifficulty() {
   return 'hard';
 }
 
-/* Filter questions by difficulty */
-export function applyDifficultyCurve(pool) {
-  const level = getCurrentDifficulty();
+/* ===============================
+   Utilities
+================================ */
 
-  const filtered = pool.filter(q => q.difficulty === level);
-
-  // Fallback if not enough questions
-  return filtered.length ? filtered : pool;
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
