@@ -5,22 +5,25 @@
 
 import { GameState, getAverageTime } from './engine.js';
 
-/* Personality rules */
+/**
+ * Analyze player personality based on gameplay
+ * @returns {{title: string, desc: string}}
+ */
 export function analyzePersonality() {
   const avgTime = getAverageTime();
-  const wrong = GameState.wrongCount;
-  const streak = GameState.correctStreak;
-  const usedLifeline = GameState.lifelineUsed;
+  const wrong = GameState.wrong || 0;
+  const streak = GameState.streak || 0;
+  const usedLifeline = GameState.lifeline || false;
 
-  // Silent mode override
-  if (GameState.mode.silent) {
+  /* Silent mode override */
+  if (GameState.silent) {
     return {
       title: "Silent Strategist 😶",
       desc: "চাপের মধ্যে চুপচাপ সিদ্ধান্ত নিতে পারো। তুমি শব্দ ছাড়াই যুদ্ধ জেতো।"
     };
   }
 
-  // Lightning fast
+  /* Lightning fast thinker */
   if (avgTime <= 5 && wrong <= 2) {
     return {
       title: "Lightning Thinker ⚡",
@@ -28,7 +31,7 @@ export function analyzePersonality() {
     };
   }
 
-  // Strategic survivor
+  /* Strategic survivor */
   if (usedLifeline && wrong <= 3) {
     return {
       title: "Strategic Survivor 🧠",
@@ -36,7 +39,7 @@ export function analyzePersonality() {
     };
   }
 
-  // Risk taker
+  /* Risk taker */
   if (wrong >= 5 && avgTime < 8) {
     return {
       title: "Risk Taker 🔥",
@@ -44,7 +47,7 @@ export function analyzePersonality() {
     };
   }
 
-  // Calm observer
+  /* Calm observer (default) */
   return {
     title: "Calm Observer 🌊",
     desc: "তুমি ধীরে ভাবো, গভীরভাবে বিচার করো। সময় নিয়ে সঠিক পথ বেছে নাও।"
