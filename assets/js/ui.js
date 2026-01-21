@@ -9,14 +9,16 @@ import {
   getProgress
 } from './engine.js';
 
-/* Screen Elements */
+/* ===============================
+   Cached DOM Elements (Guarded)
+================================ */
+
 const screens = {
   start: document.getElementById('start-screen'),
   game: document.getElementById('game-screen'),
   result: document.getElementById('result-screen')
 };
 
-/* Game UI Elements */
 const questionEl = document.getElementById('question');
 const optionsEl = document.getElementById('options-container');
 const scoreEl = document.getElementById('score');
@@ -24,16 +26,31 @@ const qCountEl = document.getElementById('q-count');
 const progressFill = document.getElementById('progress');
 const feedbackEl = document.getElementById('feedback');
 
-/* Switch Screen */
+/* ===============================
+   Screen Control
+================================ */
+
 export function showScreen(name) {
-  Object.values(screens).forEach(s => s.classList.add('hidden'));
-  screens[name].classList.remove('hidden');
+  Object.values(screens).forEach(screen => {
+    if (screen) screen.classList.add('hidden');
+  });
+
+  if (screens[name]) {
+    screens[name].classList.remove('hidden');
+  }
 }
 
-/* Render Question */
+/* ===============================
+   Render Question
+================================ */
+
 export function renderQuestion() {
   const data = getCurrentQuestion();
-  if (!data) return;
+  if (!data || !questionEl || !optionsEl) return;
+
+  // Reset animation
+  questionEl.classList.remove('question-transition');
+  void questionEl.offsetWidth; // reflow
 
   // Question text
   questionEl.textContent = data.q;
@@ -51,27 +68,36 @@ export function renderQuestion() {
     optionsEl.appendChild(btn);
   });
 
-  // Update stats
   updateStats();
 }
 
-/* Update Score, Count, Progress */
+/* ===============================
+   Stats Update
+================================ */
+
 export function updateStats() {
   const progress = getProgress();
-  scoreEl.textContent = GameState.score;
-  qCountEl.textContent = `${progress.current} / ${progress.total}`;
-  progressFill.style.width = `${progress.percent}%`;
+
+  if (scoreEl) scoreEl.textContent = GameState.score;
+  if (qCountEl)
+    qCountEl.textContent = `${progress.current} / ${progress.total}`;
+  if (progressFill)
+    progressFill.style.width = `${progress.percent}%`;
 }
 
-/* Disable all options */
+/* ===============================
+   Option Control
+================================ */
+
 export function disableOptions() {
-  [...optionsEl.children].forEach(btn => btn.disabled = true);
+  if (!optionsEl) return;
+  [...optionsEl.children].forEach(btn => (btn.disabled = true));
 }
 
-/* Highlight Correct / Wrong */
 export function showAnswer(correctIndex, selectedIndex) {
-  const buttons = [...optionsEl.children];
-  buttons.forEach((btn, idx) => {
+  if (!optionsEl) return;
+
+  [...optionsEl.children].forEach((btn, idx) => {
     btn.disabled = true;
     if (idx === correctIndex) btn.classList.add('correct');
     if (idx === selectedIndex && idx !== correctIndex)
@@ -79,21 +105,42 @@ export function showAnswer(correctIndex, selectedIndex) {
   });
 }
 
-/* Feedback text */
-export function setFeedback(text, type = 'normal') {
-  if (GameState.mode.silent) {
+/* ===============================
+   Feedback
+================================ */
+
+export function setFeedback(text = '', type = 'normal') {
+  if (!feedbackEl) return;
+
+  if (GameState.silent) {
     feedbackEl.textContent = '';
     return;
   }
+
   feedbackEl.textContent = text;
+
   feedbackEl.style.color =
-    type === 'success' ? 'var(--correct)' :
-    type === 'error' ? 'var(--wrong)' :
-    '#fff';
+    type === 'success'
+      ? 'var(--correct)'
+      : type === 'error'
+      ? 'var(--wrong)'
+      : '#ffffff';
 }
 
-/* Emotion trigger */
+/* ===============================
+   Emotion / Theme Control
+================================ */
+
 export function setEmotion(mode) {
-  document.body.className = '';
+  if (!mode) return;
+
+  document.body.classList.remove(
+    'calm',
+    'focus',
+    'panic',
+    'dark-story',
+    'silent'
+  );
+
   document.body.classList.add(mode);
 }
