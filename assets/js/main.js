@@ -3,6 +3,7 @@
    App Bootstrapper
 ================================ */
 
+import { getDifficultyStory } from './story.js';
 import { initGame, getCurrentQuestion, submitAnswer, nextQuestion } from './engine.js';
 import { renderQuestion, showScreen, setFeedback, setEmotion } from './ui.js';
 import { startTimer, clearTimer, getTimeTaken } from './timer.js';
@@ -56,15 +57,23 @@ function handleOptionClick(e) {
   submitAnswer(isCorrect, timeTaken);
   trackCategory(q.category || 'general', isCorrect);
 
-  if (isCorrect) {
-    playSound('correct');
-    setFeedback(getStoryByResult('correct'), 'success');
-    setEmotion('focus');
-  } else {
-    playSound('wrong');
-    setFeedback(getStoryByResult('wrong'), 'error');
-    setEmotion('panic');
-  }
+import { getCurrentDifficulty } from './engine.js';
+
+if (isCorrect) {
+  playSound('correct');
+  setFeedback(
+    getDifficultyStory(getCurrentDifficulty()),
+    'success'
+  );
+  setEmotion('focus');
+} else {
+  playSound('wrong');
+  setFeedback(
+    getDifficultyStory(getCurrentDifficulty()),
+    'error'
+  );
+  setEmotion('panic');
+}
 
   // Show correct / wrong
   document.querySelectorAll('.option-btn').forEach((b, i) => {
