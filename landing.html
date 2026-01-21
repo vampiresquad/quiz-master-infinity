@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz Master ∞ | Web App</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <title>Quiz Master ∞ | একটা কুইজ না — একটা অনুভূতি</title>
+
+  <!-- SEO & PWA Meta -->
+  <meta name="description" content="Quiz Master ∞ — একটা কুইজ না, একটা অনুভূতি। প্রশ্ন, গল্প আর নিজের ভেতরের মানুষকে চেনার যাত্রা।">
+  <meta name="theme-color" content="#1a2a6c">
+
+  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Hind Siliguri', sans-serif;
@@ -21,52 +30,61 @@
     }
     .box {
       max-width: 420px;
-      padding: 30px;
+      padding: 32px 24px;
     }
     h1 {
       font-size: 32px;
-      margin-bottom: 10px;
+      margin: 12px 0 10px;
     }
     p {
       opacity: 0.85;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       line-height: 1.6;
+      font-size: 15px;
     }
     .btn {
       display: inline-block;
-      padding: 14px 28px;
+      padding: 14px 30px;
       border-radius: 40px;
       background: linear-gradient(45deg, #11998e, #38ef7d);
       color: #000;
       font-weight: bold;
       text-decoration: none;
       box-shadow: 0 10px 25px rgba(56,239,125,0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(56,239,125,0.55);
     }
     .footer {
-      margin-top: 25px;
+      margin-top: 28px;
       font-size: 12px;
       opacity: 0.6;
     }
   </style>
 </head>
+
 <body>
 
-  <div class="box">
+  <main class="box">
     <div style="font-size:64px;">🧠</div>
+
     <h1>Quiz Master ∞</h1>
+
     <p>
       একটা কুইজ না — একটা অনুভূতি।<br>
       প্রশ্ন, গল্প আর নিজের ভেতরের মানুষকে চেনার যাত্রা।
     </p>
 
-    <a href="index.html" class="btn">
+    <a href="./index.html" class="btn">
       ▶ এখনই খেলো
     </a>
 
     <div class="footer">
       Web App • Offline Supported • Free
     </div>
-  </div>
+  </main>
 
 </body>
 </html>
