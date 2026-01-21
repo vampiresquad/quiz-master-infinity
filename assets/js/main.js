@@ -36,15 +36,17 @@ import {
   applyCategoryWeighting
 } from './adaptive.js';
 
-/* 🔴 CRITICAL FIX: correct relative path */
 import { questions } from '../data/questions.js';
 
 /* ===============================
-   DOM READY – SAFE BINDING
+   DOM READY – HARD SAFE BINDING
 ================================ */
 
 window.addEventListener('DOMContentLoaded', () => {
-  showScreen('start');
+  console.log('main.js loaded');
+
+  // Force start screen visible
+  forceScreen('start');
 
   const startBtn = document.getElementById('start-btn');
   if (startBtn) {
@@ -58,19 +60,39 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ===============================
+   Force Screen Switch (Fallback)
+================================ */
+
+function forceScreen(name) {
+  const start = document.getElementById('start-screen');
+  const game = document.getElementById('game-screen');
+  const result = document.getElementById('result-screen');
+
+  if (start) start.style.display = 'none';
+  if (game) game.style.display = 'none';
+  if (result) result.style.display = 'none';
+
+  if (name === 'start' && start) start.style.display = 'flex';
+  if (name === 'game' && game) game.style.display = 'flex';
+  if (name === 'result' && result) result.style.display = 'flex';
+}
+
+/* ===============================
    Start Game
 ================================ */
 
 function startGame() {
+  console.log('START CLICKED');
   playSound('click');
 
   resetAdaptive();
   const weightedQuestions = applyCategoryWeighting(questions);
   initGame(weightedQuestions);
 
-  showScreen('game');
-  setEmotion('calm');
+  // Force screen change (CSS-independent)
+  forceScreen('game');
 
+  setEmotion('calm');
   renderQuestion();
   startTimer();
 }
@@ -107,7 +129,6 @@ function handleOptionClick(e) {
     setEmotion('panic');
   }
 
-  // Highlight answers
   document.querySelectorAll('.option-btn').forEach((b, i) => {
     b.disabled = true;
     if (i === q.a) b.classList.add('correct');
@@ -132,7 +153,7 @@ function handleOptionClick(e) {
 
 function endGame() {
   clearTimer();
-  showScreen('result');
+  forceScreen('result');
   setEmotion('dark-story');
 
   const persona = analyzePersonality();
@@ -165,26 +186,3 @@ function endGame() {
 ================================ */
 
 document.addEventListener('game:end', endGame);
-
-/* ===============================
-   PWA INSTALL HANDLER
-================================ */
-
-let deferredPrompt = null;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-});
-
-export async function triggerInstall() {
-  if (!deferredPrompt) return;
-
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-}
-
-window.addEventListener('appinstalled', () => {
-  console.log('PWA installed successfully');
-});
