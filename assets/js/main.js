@@ -3,15 +3,33 @@
    App Bootstrapper
 ================================ */
 
-import { getProgress } from './engine.js';
-import { getEndingPhilosophy } from './story.js';
-import { getDifficultyStory } from './story.js';
-import { initGame, getCurrentQuestion, submitAnswer, nextQuestion } from './engine.js';
-import { renderQuestion, showScreen, setFeedback, setEmotion } from './ui.js';
+import {
+  initGame,
+  getCurrentQuestion,
+  submitAnswer,
+  nextQuestion,
+  getProgress,
+  getCurrentDifficulty,
+  GameState
+} from './engine.js';
+
+import {
+  renderQuestion,
+  showScreen,
+  setFeedback,
+  setEmotion
+} from './ui.js';
+
 import { startTimer, clearTimer, getTimeTaken } from './timer.js';
 import { playSound } from './audio.js';
-import { getIntroStory, getStoryByResult, getEndingStory } from './story.js';
+
+import {
+  getDifficultyStory,
+  getEndingPhilosophy
+} from './story.js';
+
 import { analyzePersonality } from './personality.js';
+
 import {
   trackCategory,
   resetAdaptive,
@@ -20,18 +38,23 @@ import {
 
 import { questions } from '../data/questions.js';
 
-/* Start Button */
+/* ===============================
+   Start Game
+================================ */
+
 const startBtn = document.getElementById('start-btn');
+
 if (startBtn) {
   startBtn.addEventListener('click', startGame);
 }
 
-/* Start Game */
 function startGame() {
   playSound('click');
+
   resetAdaptive();
-const weightedQuestions = applyCategoryWeighting(questions);
-initGame(weightedQuestions);
+  const weighted = applyCategoryWeighting(questions);
+  initGame(weighted);
+
   showScreen('game');
   setEmotion('calm');
 
@@ -39,8 +62,12 @@ initGame(weightedQuestions);
   startTimer();
 }
 
-/* Handle option click (event delegation) */
+/* ===============================
+   Option Click Handler
+================================ */
+
 const optionsContainer = document.getElementById('options-container');
+
 if (optionsContainer) {
   optionsContainer.addEventListener('click', handleOptionClick);
 }
@@ -53,31 +80,27 @@ function handleOptionClick(e) {
 
   const selectedIndex = Number(btn.dataset.index);
   const q = getCurrentQuestion();
+  if (!q) return;
+
   const isCorrect = selectedIndex === q.a;
   const timeTaken = getTimeTaken();
 
   submitAnswer(isCorrect, timeTaken);
   trackCategory(q.category || 'general', isCorrect);
 
-import { getCurrentDifficulty } from './engine.js';
+  const difficulty = getCurrentDifficulty();
 
-if (isCorrect) {
-  playSound('correct');
-  setFeedback(
-    getDifficultyStory(getCurrentDifficulty()),
-    'success'
-  );
-  setEmotion('focus');
-} else {
-  playSound('wrong');
-  setFeedback(
-    getDifficultyStory(getCurrentDifficulty()),
-    'error'
-  );
-  setEmotion('panic');
-}
+  if (isCorrect) {
+    playSound('correct');
+    setFeedback(getDifficultyStory(difficulty), 'success');
+    setEmotion('focus');
+  } else {
+    playSound('wrong');
+    setFeedback(getDifficultyStory(difficulty), 'error');
+    setEmotion('panic');
+  }
 
-  // Show correct / wrong
+  // Highlight answers
   document.querySelectorAll('.option-btn').forEach((b, i) => {
     b.disabled = true;
     if (i === q.a) b.classList.add('correct');
@@ -96,57 +119,65 @@ if (isCorrect) {
   }, 1400);
 }
 
-/* End Game */
+/* ===============================
+   End Game
+================================ */
+
 function endGame() {
   clearTimer();
   showScreen('result');
   setEmotion('dark-story');
 
-const persona = analyzePersonality();
-const philosophy = getEndingPhilosophy(
-  Number(document.getElementById('score').textContent),
-  getProgress().total
-);
+  const persona = analyzePersonality();
+  const progress = getProgress();
 
-document.getElementById('final-message').innerHTML = `
-  <strong>${persona.title}</strong><br>
-  ${persona.desc}<br><br>
-  <em>${philosophy}</em>
-`;
+  const philosophy = getEndingPhilosophy(
+    GameState.score,
+    progress.total
+  );
+
+  const finalMsg = document.getElementById('final-message');
+  if (finalMsg) {
+    finalMsg.innerHTML = `
+      <strong>${persona.title}</strong><br>
+      ${persona.desc}<br><br>
+      <em>${philosophy}</em>
+    `;
+  }
+
   playSound('win');
 }
 
-/* Listen game end from timer */
+/* Timer-triggered end */
 document.addEventListener('game:end', endGame);
 
-/* Greeting on load */
+/* ===============================
+   Initial Screen
+================================ */
+
 window.addEventListener('load', () => {
   showScreen('start');
 });
+
 /* ===============================
-   PWA INSTALL PROMPT HANDLER
+   PWA INSTALL HANDLER
 ================================ */
 
 let deferredPrompt = null;
 
-/* Capture install prompt */
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  console.log('Install prompt ready');
 });
 
-/* Optional: expose manual install (future button) */
 export async function triggerInstall() {
   if (!deferredPrompt) return;
 
   deferredPrompt.prompt();
-  const choice = await deferredPrompt.userChoice;
-  console.log('User choice:', choice.outcome);
+  await deferredPrompt.userChoice;
   deferredPrompt = null;
 }
 
-/* Detect app already installed */
 window.addEventListener('appinstalled', () => {
-  console.log('PWA installed successfully');
+  console.log('PWA installed');
 });
