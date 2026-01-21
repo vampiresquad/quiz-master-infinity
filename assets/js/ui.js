@@ -48,9 +48,9 @@ export function renderQuestion() {
   const data = getCurrentQuestion();
   if (!data || !questionEl || !optionsEl) return;
 
-  // Reset animation
+  // Reset animation safely
   questionEl.classList.remove('question-transition');
-  void questionEl.offsetWidth; // reflow
+  void questionEl.offsetWidth; // force reflow
 
   // Question text
   questionEl.textContent = data.q;
@@ -112,7 +112,7 @@ export function showAnswer(correctIndex, selectedIndex) {
 export function setFeedback(text = '', type = 'normal') {
   if (!feedbackEl) return;
 
-  if (GameState.silent) {
+  if (GameState.mode.silent) {
     feedbackEl.textContent = '';
     return;
   }
