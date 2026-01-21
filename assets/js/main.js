@@ -3,6 +3,7 @@
    App Bootstrapper
 ================================ */
 
+import { getEndingPhilosophy } from './story.js';
 import { getDifficultyStory } from './story.js';
 import { initGame, getCurrentQuestion, submitAnswer, nextQuestion } from './engine.js';
 import { renderQuestion, showScreen, setFeedback, setEmotion } from './ui.js';
@@ -100,18 +101,17 @@ function endGame() {
   showScreen('result');
   setEmotion('dark-story');
 
-  const persona = analyzePersonality();
-  const endingStory = getEndingStory();
+const persona = analyzePersonality();
+const philosophy = getEndingPhilosophy(
+  Number(document.getElementById('score').textContent),
+  getProgress().total
+);
 
-  document.getElementById('final-score-display').textContent =
-    document.getElementById('score').textContent;
-
-  document.getElementById('final-message').innerHTML = `
-    <strong>${persona.title}</strong><br>
-    ${persona.desc}<br><br>
-    <em>${endingStory}</em>
-  `;
-
+document.getElementById('final-message').innerHTML = `
+  <strong>${persona.title}</strong><br>
+  ${persona.desc}<br><br>
+  <em>${philosophy}</em>
+`;
   playSound('win');
 }
 
