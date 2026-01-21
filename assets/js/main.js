@@ -123,3 +123,30 @@ document.addEventListener('game:end', endGame);
 window.addEventListener('load', () => {
   showScreen('start');
 });
+/* ===============================
+   PWA INSTALL PROMPT HANDLER
+================================ */
+
+let deferredPrompt = null;
+
+/* Capture install prompt */
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  console.log('Install prompt ready');
+});
+
+/* Optional: expose manual install (future button) */
+export async function triggerInstall() {
+  if (!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+  const choice = await deferredPrompt.userChoice;
+  console.log('User choice:', choice.outcome);
+  deferredPrompt = null;
+}
+
+/* Detect app already installed */
+window.addEventListener('appinstalled', () => {
+  console.log('PWA installed successfully');
+});
