@@ -36,7 +36,7 @@ import {
   applyCategoryWeighting
 } from './adaptive.js';
 
-import { questions } from '../data/questions.js';
+import { questions } from './data/questions.js';
 
 /* ===============================
    Start Game
