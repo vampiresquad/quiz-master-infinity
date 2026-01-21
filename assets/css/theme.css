@@ -1,7 +1,57 @@
-.panic {
-  background: radial-gradient(#400, #000);
+/* ===============================
+   THEMES
+   Emotion Reactive UI
+================================ */
+
+/* Default State */
+body {
+  transition: background 0.6s ease, filter 0.4s ease;
 }
 
-.calm {
-  background: radial-gradient(#0a3, #001);
+/* Calm Mode (Normal play) */
+body.calm {
+  background: radial-gradient(circle at top, #1a2a6c, #000);
+}
+
+/* Focus Mode (Fast correct streak) */
+body.focus {
+  background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+  filter: saturate(1.2);
+}
+
+/* Panic Mode (Low time / wrong streak) */
+body.panic {
+  background: radial-gradient(circle at center, #400000, #000);
+  filter: contrast(1.2);
+}
+
+/* Dark Story Mode */
+body.dark-story {
+  background: radial-gradient(circle at bottom, #000000, #1a1a1a);
+}
+
+/* Silent Hardcore Mode */
+body.silent {
+  background: #000;
+  filter: grayscale(1);
+}
+
+/* Correct Answer Flash */
+.correct-flash {
+  animation: glow 0.6s;
+}
+
+/* Wrong Answer Shake Screen */
+.screen-shake {
+  animation: shake 0.4s;
+}
+
+/* Question Transition */
+.question-transition {
+  animation: slideIn 0.4s ease;
+}
+
+/* Hide feedback (Silent mode helper) */
+body.silent .feedback {
+  display: none;
 }
