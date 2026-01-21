@@ -101,3 +101,36 @@ export function getDifficultyStory(level) {
   const pool = difficultyStory[level] || [];
   return pool[Math.floor(Math.random() * pool.length)];
 }
+/* ===============================
+   ENDING PHILOSOPHY
+   Life-Oriented Closure
+================================ */
+
+const philosophy = {
+  high: [
+    "সব প্রশ্নের উত্তর জানা মানেই জ্ঞানী হওয়া নয়—কখন নীরব থাকতে হয় সেটাও জানতে হয়।",
+    "তুমি জিতেছো, কিন্তু মনে রেখো—জ্ঞান দায়িত্বও বয়ে আনে।",
+    "উপরে ওঠা কঠিন না, উপরে টিকে থাকাই আসল পরীক্ষা।"
+  ],
+  mid: [
+    "সব উত্তর ঠিক হওয়া জরুরি না—চেষ্টা করাটাই মানুষকে এগিয়ে নেয়।",
+    "তুমি পথে আছো, থেমে যেও না।",
+    "ভুলের ভেতরেই পরের সঠিক সিদ্ধান্ত লুকিয়ে থাকে।"
+  ],
+  low: [
+    "হারা মানে শেষ নয়—হাল ছেড়ে দেওয়া মানেই শেষ।",
+    "আজ পারোনি, কাল পারবে—এই বিশ্বাসটাই সবচেয়ে বড় শক্তি।",
+    "সব দরজা তোমার জন্য খোলেনি, কিন্তু কিছু দরজা এখনও অপেক্ষায়।"
+  ]
+};
+
+/* Get philosophy by score */
+export function getEndingPhilosophy(score, total) {
+  const ratio = score / (total * 10);
+  let pool = philosophy.low;
+
+  if (ratio >= 0.75) pool = philosophy.high;
+  else if (ratio >= 0.4) pool = philosophy.mid;
+
+  return pool[Math.floor(Math.random() * pool.length)];
+}
