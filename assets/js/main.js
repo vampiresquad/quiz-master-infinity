@@ -9,7 +9,11 @@ import { startTimer, clearTimer, getTimeTaken } from './timer.js';
 import { playSound } from './audio.js';
 import { getIntroStory, getStoryByResult, getEndingStory } from './story.js';
 import { analyzePersonality } from './personality.js';
-import { trackCategory, resetAdaptive } from './adaptive.js';
+import {
+  trackCategory,
+  resetAdaptive,
+  applyCategoryWeighting
+} from './adaptive.js';
 
 import { questions } from '../data/questions.js';
 
@@ -23,7 +27,8 @@ if (startBtn) {
 function startGame() {
   playSound('click');
   resetAdaptive();
-  initGame(questions);
+const weightedQuestions = applyCategoryWeighting(questions);
+initGame(weightedQuestions);
   showScreen('game');
   setEmotion('calm');
 
