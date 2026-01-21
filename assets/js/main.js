@@ -1,6 +1,6 @@
 /* ===============================
    MAIN ENTRY POINT
-   App Bootstrapper
+   Quiz Master ∞
 ================================ */
 
 import {
@@ -36,24 +36,37 @@ import {
   applyCategoryWeighting
 } from './adaptive.js';
 
-import { questions } from './data/questions.js';
+/* 🔴 CRITICAL FIX: correct relative path */
+import { questions } from '../data/questions.js';
+
+/* ===============================
+   DOM READY – SAFE BINDING
+================================ */
+
+window.addEventListener('DOMContentLoaded', () => {
+  showScreen('start');
+
+  const startBtn = document.getElementById('start-btn');
+  if (startBtn) {
+    startBtn.addEventListener('click', startGame);
+  }
+
+  const optionsContainer = document.getElementById('options-container');
+  if (optionsContainer) {
+    optionsContainer.addEventListener('click', handleOptionClick);
+  }
+});
 
 /* ===============================
    Start Game
 ================================ */
 
-const startBtn = document.getElementById('start-btn');
-
-if (startBtn) {
-  startBtn.addEventListener('click', startGame);
-}
-
 function startGame() {
   playSound('click');
 
   resetAdaptive();
-  const weighted = applyCategoryWeighting(questions);
-  initGame(weighted);
+  const weightedQuestions = applyCategoryWeighting(questions);
+  initGame(weightedQuestions);
 
   showScreen('game');
   setEmotion('calm');
@@ -65,12 +78,6 @@ function startGame() {
 /* ===============================
    Option Click Handler
 ================================ */
-
-const optionsContainer = document.getElementById('options-container');
-
-if (optionsContainer) {
-  optionsContainer.addEventListener('click', handleOptionClick);
-}
 
 function handleOptionClick(e) {
   const btn = e.target.closest('.option-btn');
@@ -145,19 +152,19 @@ function endGame() {
     `;
   }
 
+  const finalScore = document.getElementById('final-score-display');
+  if (finalScore) {
+    finalScore.textContent = GameState.score;
+  }
+
   playSound('win');
 }
 
-/* Timer-triggered end */
-document.addEventListener('game:end', endGame);
-
 /* ===============================
-   Initial Screen
+   Timer-triggered Game End
 ================================ */
 
-window.addEventListener('load', () => {
-  showScreen('start');
-});
+document.addEventListener('game:end', endGame);
 
 /* ===============================
    PWA INSTALL HANDLER
@@ -179,5 +186,5 @@ export async function triggerInstall() {
 }
 
 window.addEventListener('appinstalled', () => {
-  console.log('PWA installed');
+  console.log('PWA installed successfully');
 });
