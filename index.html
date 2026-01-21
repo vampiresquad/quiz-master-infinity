@@ -1,1 +1,116 @@
-<link rel="stylesheet" href="assets/css/base.css">
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Quiz Master ∞ | Mind Experience</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Base CSS (imports others internally) -->
+  <link rel="stylesheet" href="assets/css/base.css" />
+
+</head>
+<body class="calm">
+
+  <!-- ================= APP ROOT ================= -->
+  <main class="app">
+
+    <!-- ========== START SCREEN ========== -->
+    <section id="start-screen" class="screen">
+      <div class="glass-card center">
+
+        <div style="font-size:60px; margin-bottom:10px;">🧠</div>
+
+        <h1>Quiz Master ∞</h1>
+        <p>একটা কুইজ না — একটা অনুভূতি</p>
+
+        <button id="start-btn" class="btn-primary">
+          ▶ শুরু করো
+        </button>
+
+        <div class="footer">
+          © 2026 Shourov’s Creation
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== GAME SCREEN ========== -->
+    <section id="game-screen" class="screen hidden">
+
+      <div class="glass-card">
+
+        <!-- Header -->
+        <div class="header">
+          <div class="stat-pill">
+            ⏳ <span id="timer">15</span>
+          </div>
+
+          <button class="lifeline-btn" id="lifeline-btn">
+            💡 50/50
+          </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+          <div class="stat-pill">
+            ⭐ স্কোর: <span id="score">0</span>
+          </div>
+          <div class="stat-pill">
+            🏆 <span id="q-count">1 / 1</span>
+          </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress">
+          <div id="progress" class="progress-fill"></div>
+        </div>
+
+        <!-- Question -->
+        <div class="question-box">
+          <h2 id="question">
+            প্রশ্ন লোড হচ্ছে…
+          </h2>
+        </div>
+
+        <!-- Options -->
+        <div id="options-container" class="options"></div>
+
+        <!-- Feedback -->
+        <p id="feedback" class="feedback"></p>
+
+      </div>
+    </section>
+
+    <!-- ========== RESULT SCREEN ========== -->
+    <section id="result-screen" class="screen hidden">
+      <div class="glass-card center">
+
+        <h1>খেলা শেষ</h1>
+
+        <div class="score-circle">
+          <span id="final-score-display">0</span>
+        </div>
+
+        <p id="final-message"></p>
+
+        <button class="btn-primary" onclick="location.reload()">
+          🔁 আবার খেলো
+        </button>
+
+        <div class="footer">
+          নিজের ভেতরের মানুষটাকে চিনে নাও
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script type="module" src="assets/js/main.js"></script>
+
+</body>
+</html>
