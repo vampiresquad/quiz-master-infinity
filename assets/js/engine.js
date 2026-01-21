@@ -86,3 +86,26 @@ function shuffle(arr) {
   }
   return arr;
 }
+/* ===============================
+   DIFFICULTY CURVE
+   Easy → Medium → Hard
+================================ */
+
+/* Get difficulty by progress */
+export function getCurrentDifficulty() {
+  const progress = GameState.index / Math.max(1, totalQuestions);
+
+  if (progress < 0.33) return 'easy';
+  if (progress < 0.66) return 'medium';
+  return 'hard';
+}
+
+/* Filter questions by difficulty */
+export function applyDifficultyCurve(pool) {
+  const level = getCurrentDifficulty();
+
+  const filtered = pool.filter(q => q.difficulty === level);
+
+  // Fallback if not enough questions
+  return filtered.length ? filtered : pool;
+}
