@@ -3,6 +3,7 @@
    App Bootstrapper
 ================================ */
 
+import { getProgress } from './engine.js';
 import { getEndingPhilosophy } from './story.js';
 import { getDifficultyStory } from './story.js';
 import { initGame, getCurrentQuestion, submitAnswer, nextQuestion } from './engine.js';
