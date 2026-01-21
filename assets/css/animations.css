@@ -52,21 +52,27 @@
 /* Timer Panic Pulse */
 @keyframes pulseRed {
   0% { color: #ff5252; }
-  50% { color: #fff; }
+  50% { color: #ffffff; }
   100% { color: #ff5252; }
 }
 
-/* Utility Animation Classes */
+/* ===============================
+   Utility Animation Classes
+================================ */
+
 .fade-in {
   animation: fadeIn 0.4s ease;
+  will-change: opacity, transform;
 }
 
 .slide-in {
   animation: slideIn 0.4s ease;
+  will-change: opacity, transform;
 }
 
 .shake {
   animation: shake 0.4s;
+  will-change: transform;
 }
 
 .glow {
@@ -75,4 +81,15 @@
 
 .timer-panic {
   animation: pulseRed 0.8s infinite;
+}
+
+/* ===============================
+   Accessibility & Performance
+================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
