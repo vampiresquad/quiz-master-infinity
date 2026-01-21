@@ -10,23 +10,24 @@
 export const GameState = {
   index: 0,
   score: 0,
-  wrong: 0,
-  streak: 0,
-  lifeline: false,
   timeHistory: [],
+  wrongCount: 0,
+  correctStreak: 0,
+  lifelineUsed: false,
 
-  /* Modes */
-  silent: false,
-  story: true,
-  adaptive: true,
+  mode: {
+    silent: false,
+    story: true,
+    adaptive: true
+  },
 
   reset() {
     this.index = 0;
     this.score = 0;
-    this.wrong = 0;
-    this.streak = 0;
-    this.lifeline = false;
     this.timeHistory = [];
+    this.wrongCount = 0;
+    this.correctStreak = 0;
+    this.lifelineUsed = false;
   }
 };
 
@@ -44,7 +45,7 @@ let totalQuestions = 0;
 export function initGame(questionPool) {
   GameState.reset();
 
-  // Shuffle question pool
+  // Shuffle questions
   questions = shuffle([...questionPool]);
   totalQuestions = questions.length;
 }
@@ -62,10 +63,10 @@ export function submitAnswer(isCorrect, timeTaken) {
 
   if (isCorrect) {
     GameState.score += 10;
-    GameState.streak++;
+    GameState.correctStreak++;
   } else {
-    GameState.wrong++;
-    GameState.streak = 0;
+    GameState.wrongCount++;
+    GameState.correctStreak = 0;
   }
 }
 
@@ -91,7 +92,7 @@ export function getProgress() {
 export function getAverageTime() {
   if (!GameState.timeHistory.length) return 0;
   const sum = GameState.timeHistory.reduce((a, b) => a + b, 0);
-  return sum / GameState.timeHistory.length;
+  return (sum / GameState.timeHistory.length).toFixed(1);
 }
 
 /* ===============================
@@ -99,10 +100,10 @@ export function getAverageTime() {
 ================================ */
 
 export function getCurrentDifficulty() {
-  const progress = GameState.index / Math.max(1, totalQuestions);
+  const ratio = GameState.index / Math.max(1, totalQuestions);
 
-  if (progress < 0.33) return 'easy';
-  if (progress < 0.66) return 'medium';
+  if (ratio < 0.33) return 'easy';
+  if (ratio < 0.66) return 'medium';
   return 'hard';
 }
 
