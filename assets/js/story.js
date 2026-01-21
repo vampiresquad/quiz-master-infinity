@@ -72,3 +72,32 @@ export function getEndingStory() {
     ? pick(story.end_good)
     : pick(story.end_bad);
 }
+/* ===============================
+   STORY by DIFFICULTY
+   Narrative Depth Control
+================================ */
+
+const difficultyStory = {
+  easy: [
+    "শুরুটা সহজ… আলো এখনও তোমার সাথে আছে।",
+    "প্রথম দরজাগুলো সহজেই খুলে যাচ্ছে।",
+    "তুমি পথটা চিনে নিতে শুরু করেছো।"
+  ],
+  medium: [
+    "এখন প্রশ্নগুলো ভাবতে বাধ্য করছে…",
+    "সব সিদ্ধান্ত আর সহজ না।",
+    "আলো আর অন্ধকারের সীমা ঝাপসা।"
+  ],
+  hard: [
+    "এখানে আর কোনো সহজ পথ নেই।",
+    "নিজের বিশ্বাসকেই প্রশ্ন করতে হবে।",
+    "শেষের দরজাগুলো কেবল সাহসীদের জন্য।"
+  ]
+};
+
+/* Get story based on difficulty */
+export function getDifficultyStory(level) {
+  if (!GameState.mode.story) return '';
+  const pool = difficultyStory[level] || [];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
