@@ -45,3 +45,35 @@ export function adaptQuestions(questionPool) {
 export function resetAdaptive() {
   Object.keys(performance).forEach(k => delete performance[k]);
 }
+/* ===============================
+   CATEGORY WEIGHTING
+   Smart Mirror Mode
+================================ */
+
+/* Calculate weight for each category */
+export function getCategoryWeights() {
+  const weights = {};
+
+  Object.keys(performance).forEach(cat => {
+    const { correct, wrong } = performance[cat];
+    const total = correct + wrong || 1;
+
+    // More wrong = higher weight
+    weights[cat] = wrong / total;
+  });
+
+  return weights;
+}
+
+/* Reorder question pool by weight */
+export function applyCategoryWeighting(pool) {
+  if (!GameState.mode.adaptive) return pool;
+
+  const weights = getCategoryWeights();
+
+  return [...pool].sort((a, b) => {
+    const wa = weights[a.category] ?? 0;
+    const wb = weights[b.category] ?? 0;
+    return wb - wa; // higher weight first
+  });
+}
